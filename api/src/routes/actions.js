@@ -7,35 +7,41 @@ const { Dog, Temperament } = require("../db.js");
 //la funcion getDogs es asincrona por lo quese debe esperar su respuesta para continuar la ejecucion del programa.
 module.exports = {
   getDogs: async () => {
-    var config = {
-      method: "get",
-      url: `https://api.thedogapi.com/v1/breeds?api_key=${API_KEY}`,
-      headers: {},
-    };
+    //   var config = {
+    //     method: "get",
+    //     url: `https://api.thedogapi.com/v1/breeds?api_key=${API_KEY}`,
+    //     headers: {},
+    //   };
 
-    return axios(config)
-      .then((response) => {
-        return response.data;
-      })
-      .catch((error) => {
-        return error;
-      });
+    //   return axios(config)
+    //     .then((response) => {
+    //       return response.data;
+    //     })
+    //     .catch((error) => {
+    //       return error;
+    //     });
+    return await Dog.findAll();
   },
 
   getDogsByName: async (name) => {
-    var config = {
-      method: "get",
-      url: `https://api.thedogapi.com/v1/breeds/search?q=${name}&api_key=${API_KEY}`,
-      headers: {},
-    };
+    // var config = {
+    //   method: "get",
+    //   url: `https://api.thedogapi.com/v1/breeds/search?q=${name}&api_key=${API_KEY}`,
+    //   headers: {},
+    // };
 
-    return axios(config)
-      .then((response) => {
-        return response.data;
-      })
-      .catch((error) => {
-        return error;
-      });
+    // return axios(config)
+    //   .then((response) => {
+    //     return response.data;
+    //   })
+    //   .catch((error) => {
+    //     return error;
+    //   });
+    return await Dog.findAll({
+      where: {
+        [Op.substring]: name,
+      },
+    });
   },
   createDog: async (data) => {
     try {
@@ -120,7 +126,7 @@ module.exports = {
         weight: e.weight.metric,
         height: e.height.metric,
         life_span: e.life_span,
-        temperaments: e.temperament?.split(", "),
+        temperaments: e.temperament,
         img: e.image.url,
         origin: e.origin,
       };
@@ -135,9 +141,9 @@ module.exports = {
     }, []);
 
     let tempBDD = await Temperament.bulkCreate(newArr);
-    await Dog.bulkCreate(allDogsToBDD);
+    let dogsBDD = await Dog.bulkCreate(allDogsToBDD);
 
-    let dog_temperament = allDogs?.map((e) => {});
+    //allDogs?.map((e) => {});
 
     return;
   },

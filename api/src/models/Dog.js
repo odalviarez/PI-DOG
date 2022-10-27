@@ -27,6 +27,15 @@ module.exports = (sequelize) => {
         type: DataTypes.STRING,
         allowNull: false,
       },
+      temperaments: {
+        type: DataTypes.STRING,
+      },
+      img: {
+        type: DataTypes.STRING,
+      },
+      origin: {
+        type: DataTypes.STRING,
+      },
     },
     {
       timestamps: false,

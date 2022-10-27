@@ -38,7 +38,6 @@ router.get("/dogs", async (req, res) => {
 //Se debe traer de la API y guardarlos en la BDD
 //Trae todos los temperamentos
 router.get("/dogs/temperaments", async (req, res) => {
-  console.log("entro");
   try {
     let result = await getTemperaments();
     res.json(result);
