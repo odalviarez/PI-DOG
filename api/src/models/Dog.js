@@ -7,7 +7,8 @@ module.exports = (sequelize) => {
     "dog",
     {
       id: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.UUID,
+        defaultValue: DataTypes.UUIDV4,
         allowNull: false,
         primaryKey: true,
       },
@@ -27,7 +28,7 @@ module.exports = (sequelize) => {
         type: DataTypes.STRING,
         allowNull: false,
       },
-      temperaments: {
+      temperament: {
         type: DataTypes.STRING,
       },
       img: {

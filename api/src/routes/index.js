@@ -1,11 +1,11 @@
 const { Router } = require("express");
 const {
   getDogs,
-  getDogsByName,
+ // getDogsByName,
   createDog,
   getTemperaments,
   getDogsAndSave,
-  getDogById
+  getDogById,
 } = require("./actions.js");
 
 // Importar todos los routers;
@@ -18,17 +18,12 @@ const router = Router();
 
 router.get("/dogs", async (req, res) => {
   try {
-    let allDogs = {};
     let { name } = req.query;
-    if (name) {
-      allDogs = await getDogsByName(name);
-      if (!allDogs.length) {
-        return res.status(404).json("Ningun resultado encontrado");
-      }
+    let allDogs = await getDogs(name);
+    if (allDogs.length) {
       res.json(allDogs);
     } else {
-      allDogs = await getDogs();
-      res.json(allDogs);
+      res.send("ningun dato encontrado");
     }
   } catch (error) {
     res.send(error.message);
@@ -46,10 +41,9 @@ router.get("/dogs/temperaments", async (req, res) => {
   }
 });
 
-
 // Para pruebas
 
-router.get("/dogs/save", async (req, res) => {
+router.get("/home", async (req, res) => {
   try {
     let allDogs = {};
     allDogs = await getDogsAndSave();
@@ -58,7 +52,6 @@ router.get("/dogs/save", async (req, res) => {
     res.send(error.message);
   }
 });
-
 
 //trae la informacion completa de un perro por id
 router.get("/dogs/:id", async (req, res) => {
@@ -75,13 +68,12 @@ router.post("/dogs", async (req, res) => {
   //crea un perro y lo guarda en la BDD, recibe por body el json
 
   try {
-    let resp = createDog(req.body);
-    res.send(resp);
+    let resp = await createDog(req.body);
+    console.log(resp);
+    res.json(resp);
   } catch (error) {
-    res.send(error.messange);
+    res.json(error.messange);
   }
 });
-
-
 
 module.exports = router;
