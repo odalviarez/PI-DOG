@@ -1,4 +1,4 @@
-//import axios from "axios";
+import axios from "axios";
 
 export const GET_ALL_DOGS = "GET_ALL_DOGS";
 export const GET_DOG_DETAILS = "GET_DOG_DETAILS";
@@ -19,6 +19,17 @@ export const getAllDogs = () => (dispatch) => {
         );
 };
 
+export const getAllDogsHome = () => (dispatch) => {
+  return fetch("http://localhost:3001/home")
+    .then((json) => json.json())
+    .then((json) =>
+      dispatch({
+        type: GET_ALL_DOGS,
+        payload: json,
+      })
+    );
+};
+  
 export const getDogDetail = (id) => (dispatch) => {
   return fetch(`http://localhost:3001/dogs/${id}`)
     .then((json) => json.json())
@@ -54,9 +65,27 @@ export const searchDogs = (value) => (dispatch) => {
 
 
 export const createDog = (values) => { 
+var config = {
+  method: "post",
+  url: "http://localhost:3001/dogs",
+  headers: {
+    "Content-Type": "application/json",
+  },
+  data: values,
+};
+
+let response = axios(config)
+  .then(function (response) {
+    console.log(JSON.stringify(response.data));
+  })
+  .catch(function (error) {
+    console.log(error);
+  });
+
+
     return {
       type: CREATE_DOG,
-      payload: {...values}
+      payload: response
     };
 };
 

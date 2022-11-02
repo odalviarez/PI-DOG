@@ -6,7 +6,7 @@ import {
   SEARCH_DOGS,
   GET_TEMPERAMENTS,
 } from "../actions/index";
-
+import axios from "axios"
 
 const initialState = {
   dogs: [],

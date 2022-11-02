@@ -1,6 +1,7 @@
 import React from "react";
 import * as actions from "../../redux/actions/index";
 import { useDispatch, useSelector } from "react-redux";
+import { Link } from "react-router-dom";
 
 const DogDetails = (props) => {
   const id = props.match.params.id;
@@ -15,8 +16,22 @@ console.log(dogDetail);
 
   return (
     <div>
+      <Link to='/home'>
+        <button>back</button>
+      </Link>
       <h1>{dogDetail.name}</h1>
-      <img src={dogDetail.image?.url} alt={dogDetail.image?.url} />
+      <img
+        src={
+          dogDetail.image?.hasOwnProperty("url")
+            ? dogDetail.image.url
+            : dogDetail.image
+        }
+        alt={
+          dogDetail.image?.hasOwnProperty("url")
+            ? dogDetail.image.url
+            : dogDetail.image
+        }
+      />
       <p>{dogDetail.temperament}</p>
       <p>{dogDetail.origin}</p>
       <p>{dogDetail.life_span}</p>

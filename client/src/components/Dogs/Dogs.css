@@ -1,4 +1,11 @@
-.card img{
-    width: 40rem;
-    height: 40rem;
+.cards{
+        display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            flex-wrap: wrap;
+            margin-top: 20px;
+            margin-left: 20px;
+            margin-right: 20px;
+            margin-bottom: 20px;
 }
