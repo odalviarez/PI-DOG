@@ -6,6 +6,7 @@ const {
   getTemperaments,
   getDogsAndSave,
   getDogById,
+  getAllDogs,
 } = require("./actions.js");
 
 // Importar todos los routers;
@@ -19,14 +20,14 @@ const router = Router();
 router.get("/dogs", async (req, res) => {
   try {
     let { name } = req.query;
-    let allDogs = await getDogs(name);
+    let allDogs = await getAllDogs(name);
     if (allDogs.length) {
       res.json(allDogs);
     } else {
-      res.send("ningun dato encontrado");
+      res.status(404).send("ningun dato encontrado");
     }
   } catch (error) {
-    res.send(error.message);
+    res.json(error.message);
   }
 });
 
@@ -37,11 +38,10 @@ router.get("/dogs/temperaments", async (req, res) => {
     let result = await getTemperaments();
     res.json(result);
   } catch (error) {
-    res.send(error.messange);
+    res.json(error.messange);
   }
 });
 
-// Para pruebas
 
 router.get("/home", async (req, res) => {
   try {
@@ -49,7 +49,7 @@ router.get("/home", async (req, res) => {
     allDogs = await getDogsAndSave();
     res.json(allDogs);
   } catch (error) {
-    res.send(error.message);
+    res.json(error.message);
   }
 });
 
@@ -58,9 +58,9 @@ router.get("/dogs/:id", async (req, res) => {
   //busca el id y trae la informacion, si no lo encuentra debe retornar 404 y un mensaje que indique el id no existe
   try {
     let { id } = req.params;
-    res.send(await getDogById(id));
+    res.json(await getDogById(id));
   } catch (error) {
-    res.send(error.messange);
+    res.json(error.messange);
   }
 });
 
@@ -69,7 +69,6 @@ router.post("/dogs", async (req, res) => {
 
   try {
     let resp = await createDog(req.body);
-    console.log(resp);
     res.json(resp);
   } catch (error) {
     res.json(error.messange);

@@ -14,14 +14,14 @@ const getDogs = async (name) => {
     headers: {},
   };
 
-  // let allDogs = await axios(config)
-  //   .then((response) => {
-  //     return response.data;
-  //   })
-  //   .catch((error) => {
-  //     return error;
-  //   });
-  let allDogs = await Dog.findAll();
+  let allDogs = await axios(config)
+    .then((response) => {
+      return response.data;
+    })
+    .catch((error) => {
+      return error;
+    });
+  //let allDogs = await Dog.findAll();
   if (name) {
     let dogsFilter = allDogs.filter((e) =>
       e.name.toLowerCase().includes(name.toLowerCase())
@@ -31,66 +31,81 @@ const getDogs = async (name) => {
   return allDogs;
 };
 
-// const getDogsByName = async (name) => {
-//   // var config = {
-//   //   method: "get",
-//   //   url: `https://api.thedogapi.com/v1/breeds/search?q=${name}&api_key=${API_KEY}`,
-//   //   headers: {},
-//   // };
-//   var config = {
-//     method: "get",
-//     url: `https://api.thedogapi.com/v1/breeds?api_key=${API_KEY}`,
-//     headers: {},
-//   };
-
-//   let allDogs = await axios(config)
-//     .then((response) => {
-//       return response.data;
-//     })
-//     .catch((error) => {
-//       return error;
-//     });
-
-// return await Dog.findAll({
-//   where: {
-//     name: {
-//       [Op.iLike]: `%${name}%`,
-//     },
-//   },
-// });
-// }
-
-const getDogsBDDInfo = async () => {
-  return await Dog.findAll({
-    include: {
-      model: Temperament,
-      attributes: ["id", "name"],
-      through: {
-        attributes: [],
+const getDogsBDDInfo = async (name) => {
+  let dogsBDD = [];
+  let dogTemperament = [];
+  if (name) {
+    dogsBDD = await Dog.findAll({
+      where: {
+        name: {
+          [Op.iLike]: `%${name}%`,
+        },
       },
-    },
-  });
+      include: {
+        model: Temperament,
+      },
+    });
+  } else {
+    dogsBDD = await Dog.findAll({
+      include: {
+        model: Temperament,
+      },
+    });
+  }
+  // dogsBDD.map((e) => {
+  //   if (e.temperaments.length) {
+  //     e.temperaments.map((elem) => dogTemperament.push(elem.name));
+  //   }
+  // });
+  // dogTemperament = dogTemperament.join(", ");
+  // console.log(dogTemperament);
+  // dogsBDD["temperament"] = dogTemperament //adaptamos para retornar string al front
+  // console.log(dogTemperament);
+
+  return dogsBDD;
 };
 
-const getAllDogs = async () => {
-  const apiData = getDogs();
-  const BDDData = getDogsBDDInfo();
-  return apiData.concat(BDDData);
+const getAllDogs = async (name) => {
+  const apiData = await getDogs(name);
+  const BDDData = await getDogsBDDInfo(name);
+  //console.log(BDDData);
+  let allData = apiData.concat(BDDData);
+  //console.log(allData)
+  let allDogsAPI = allData?.map((e) => {
+    return {
+      id: e.id,
+      name: e.name,
+      weight: e.weight,
+      height: e.height,
+      life_span: e.life_span,
+      temperament: e.temperament,
+      image: e.image,
+      origin: e.origin,
+    };
+  });
+
+  return allDogsAPI;
 };
 
 const createDog = async (data) => {
+  console.log(data)
   try {
-    let { name, weight, height, life_span, temperament, img, origin } = data;
-    const dogCreated = await Dog.create({
-      name,
-      weight,
-      height,
-      life_span,
-      temperament,
-      img,
-      origin,
-    });
-    return "dog created succefull";
+    let { name, weight, height, life_span, temperament, temperaments, image, origin } = data;
+    if (name && weight && height && life_span && temperaments && temperament) {
+      const dogCreated = await Dog.create({
+        name,
+        weight,
+        height,
+        life_span,
+        temperament,
+        image,
+        origin,
+      });
+      dogCreated.addTemperament(temperaments);
+      return dogCreated;
+    } else {
+      return "Faltan datos para crear el perro";
+    }
   } catch (error) {
     return error;
   }
@@ -137,62 +152,50 @@ const getTemperaments = async () => {
 };
 
 const getDogById = async (id) => {
-  var config = {
-    method: "get",
-    url: `https://api.thedogapi.com/v1/breeds?api_key=${API_KEY}`,
-    headers: {},
-  };
+  // var config = {
+  //   method: "get",
+  //   url: `https://api.thedogapi.com/v1/breeds?api_key=${API_KEY}`,
+  //   headers: {},
+  // };
 
-  let dogFilter = await axios(config)
-    .then((response) => {
-      return response.data;
-    })
-    .catch((error) => {
-      return error;
-    });
+  // let dogFilter = await axios(config)
+  //   .then((response) => {
+  //     return response.data;
+  //   })
+  //   .catch((error) => {
+  //     return error;
+  //   });
+
   //retorna el objeto con los datos del perro buscado por ID
-  return dogFilter.find((e) => Number(e.id) === Number(id));
+  let dogFilter = await getAllDogs(); //getDogs();
+  let dogFind = dogFilter.find((e) => Number(e.id) === Number(id));
+  if (dogFind) {
+    return dogFind;
+  } else {
+    //buscamos primero si el ID se encuentra en la base de datos. Si se encuentra retorna toda la info de ese perro. de lo contrario llama la api y busca el perro
+    dogFilter = await Dog.findAll();
+    if (dogFilter.length) return dogFilter.find((e) => e.id == id);
+  }
+  return `ID ${id} not found`;
 };
 
-const getDogsAndSave = async () => {
-  var config = {
-    method: "get",
-    url: `https://api.thedogapi.com/v1/breeds?api_key=${API_KEY}`,
-    headers: {},
-  };
-  let allDogs = await axios(config)
-    .then((response) => {
-      return response.data;
-    })
-    .catch((error) => {
-      return error;
-    });
+const getDogsAndSave = async (name) => {
+  let allDogs = await getDogs(name);
 
   let temperaments = [];
   let newArr = [];
 
-  let allDogsToBDD = allDogs?.map((e) => {
+  allDogs?.map((e) => {
     temperaments = temperaments.concat(e.temperament?.split(", "));
-    return {
-      id: e.id,
-      name: e.name,
-      weight: e.weight.metric,
-      height: e.height.metric,
-      life_span: e.life_span,
-      temperament: e.temperament,
-      img: e.image.url,
-      origin: e.origin,
-    };
   });
   temperaments.sort();
-  temperaments.reduce((acc, item) => {
+  let acc = temperaments.reduce((acc, item) => {
     if (!acc.includes(item) && item !== undefined) {
       acc.push(item);
       newArr.push({ name: item });
     }
     return acc;
   }, []);
-
   newArr.map(async (elem) => {
     await Temperament.findOrCreate({
       where: {
@@ -201,9 +204,9 @@ const getDogsAndSave = async () => {
     });
   });
   //await Temperament.bulkCreate(newArr);
-  await Dog.bulkCreate(allDogsToBDD);
+  //await Dog.bulkCreate(allDogsToBDD);
 
-  return "Creados en la BDD";
+  return allDogs;
 };
 
 module.exports = {
