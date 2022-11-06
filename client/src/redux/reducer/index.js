@@ -5,6 +5,7 @@ import {
   DELETE_DOG,
   SEARCH_DOGS,
   GET_TEMPERAMENTS,
+  CLEAR_DETAILS,
 } from "../actions/index";
 import axios from "axios"
 
@@ -12,7 +13,8 @@ const initialState = {
   dogs: [],
   dogDetail: {},
   dogsSearch: [],
-  temperaments: []
+  temperaments: [],
+
 };
 
 const rootReducer = (state = initialState, action) => {
@@ -29,11 +31,17 @@ const rootReducer = (state = initialState, action) => {
         dogDetail: action.payload,
       };
 
-    case CREATE_DOG:
+    case CLEAR_DETAILS:
       return {
         ...state,
-        dogs: [...state.dogs, action.payload],
+        dogDetail: action.payload,
       };
+
+    // case CREATE_DOG:
+    //   return {
+    //     ...state,
+    //     dogs: [...state.dogs, action.payload],
+    //   };
 
     case DELETE_DOG:
       return {

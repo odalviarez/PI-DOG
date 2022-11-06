@@ -5,49 +5,138 @@ import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import DogCard from "../DogCard/DogCard";
 import { Link } from "react-router-dom";
+import Paginado from "./Paginado";
+import Loader from "../Loader/Loader";
+import Error from "../Error/Error";
+import Footer from "../Footer/Footer";
 
 const Dogs = () => {
-  var dogsFiltering = [];
-  const dispatch = useDispatch();
-
-const temperaments = useSelector((state) => state.temperaments);
-
-  React.useEffect(() => {
-    dispatch(actions.getAllDogs());
-    dispatch(actions.getTemperaments());
-
-  }, [dispatch]);
-
-
   const [searchDogs, setSearchDogs] = React.useState({
     name: "",
     temperament: "",
+    sort: "",
+    created: "all",
   });
-  const dogs = useSelector((state) => state.dogs);
 
-  if (!searchDogs.name && !searchDogs.temperament) {
-    dogsFiltering = dogs;
-  } else if (searchDogs.name && !searchDogs.temperament) {
+  const [currentPage, setCurrentPage] = React.useState(1);
+  const [dogsPerPage, setDogsPerPage] = React.useState(8);
+
+  const dispatch = useDispatch();
+
+  React.useEffect(() => {
+    if (searchDogs.created === "created") dispatch(actions.getDogsBDD());
+    else if (searchDogs.created === "api") dispatch(actions.getDogsAPI());
+    else dispatch(actions.getAllDogs());
+    dispatch(actions.getTemperaments());
+    dispatch(actions.clearDetails());
+  }, [dispatch, searchDogs.created]);
+
+  const temperaments = useSelector((state) => state.temperaments);
+  const dogs = useSelector((state) => state.dogs);
+  const error = useSelector((state) => state.error);
+
+  const indexLastDog = currentPage * dogsPerPage;
+  const indexFirstDog = indexLastDog - dogsPerPage;
+
+  var dogsFiltering = [];
+
+  // funcion que envio por props al componente Paginado
+  const paginate = (props) => {
+    setCurrentPage(props);
+  };
+
+  //Filtros para busqueda por nombre tiempo real y temperamento.
+  if (!searchDogs.name && !searchDogs.temperament && Array.isArray(dogs)) {
+    dogsFiltering = [...dogs];
+  }
+
+  //ordena solo por nombre
+  if (searchDogs.name && !searchDogs.temperament && Array.isArray(dogs)) {
     dogs?.map((e) =>
       e.name.toLowerCase().includes(searchDogs.name.toLowerCase())
         ? dogsFiltering.push(e)
         : null
     );
-  } else if (!searchDogs.name && searchDogs.temperament) {
+  }
+  //ordena solo por temperamento
+  else if (!searchDogs.name && searchDogs.temperament && Array.isArray(dogs)) {
     dogs?.map((e) =>
-      e.temperament?.toLowerCase().includes(searchDogs.temperament.toLowerCase())
+      e.temperament
+        ?.toLowerCase()
+        .includes(searchDogs.temperament.toLowerCase())
         ? dogsFiltering.push(e)
         : null
     );
-  } else if(searchDogs.name && searchDogs.temperament){
+  }
+  //ordena por temperamento y nombre
+  else if (searchDogs.name && searchDogs.temperament && Array.isArray(dogs)) {
     dogs?.map((e) =>
-      e.temperament?.toLowerCase().includes(searchDogs.temperament.toLowerCase()) && e.name.toLowerCase().includes(searchDogs.name.toLowerCase()) ?
-      dogsFiltering.push(e):
-      null
+      e.temperament
+        ?.toLowerCase()
+        .includes(searchDogs.temperament.toLowerCase()) &&
+      e.name.toLowerCase().includes(searchDogs.name.toLowerCase())
+        ? dogsFiltering.push(e)
+        : null
     );
   }
+  //ordena por peso o alfabetico, si se habian aplicado filtros previos se organizan.
+  if (searchDogs.sort && Array.isArray(dogs)) {
+    console.log(searchDogs.sort);
+    if (searchDogs.sort === "asc") {
+      dogsFiltering.sort((elem1, elem2) => {
+        if (elem1.name.toLowerCase() < elem2.name.toLowerCase()) return -1;
+        if (elem1.name.toLowerCase() > elem2.name.toLowerCase()) return 1;
+        return 0;
+      });
+    } else if (searchDogs.sort === "des") {
+      dogsFiltering.sort((elem1, elem2) => {
+        if (elem1.name.toLowerCase() < elem2.name.toLowerCase()) return 1;
+        if (elem1.name.toLowerCase() > elem2.name.toLowerCase()) return -1;
+        return 0;
+      });
+    } else if (searchDogs.sort === "menor" || searchDogs.sort === "mayor") {
+      dogsFiltering.sort((elem1, elem2) => {
+        let elem1Aux = elem1.weight?.hasOwnProperty("metric")
+          ? elem1.weight.metric
+          : elem1.weight;
+        let elem2Aux = elem2.weight?.hasOwnProperty("metric")
+          ? elem2.weight.metric
+          : elem2.weight;
 
+        elem1Aux = elem1Aux.split("-");
+        let weight1prom = elem1Aux.filter((n) => !isNaN(n));
+        const initialValue = 0;
+
+        let sum1 = weight1prom.reduce(
+          (previousValue, currentValue) =>
+            Number(previousValue) + Number(currentValue),
+          initialValue
+        );
+        sum1 = sum1 / (!weight1prom.length ? 1 : weight1prom.length);
+
+        elem2Aux = elem2Aux.split("-");
+
+        let weight2prom = elem2Aux.filter((n) => !isNaN(n));
+
+        let sum2 = weight2prom.reduce(
+          (previousValue, currentValue) =>
+            Number(previousValue) + Number(currentValue),
+          initialValue
+        );
+        sum2 = sum2 / (!weight2prom.length ? 1 : weight2prom.length);
+        if (isNaN(sum1)) console.log(sum1, weight1prom);
+        if (sum1 < sum2) return -1;
+        if (sum1 > sum2) return 1;
+        return 0;
+      });
+      if (searchDogs.sort === "mayor") dogsFiltering.reverse();
+    }
+  }
+  const currentDogs = dogsFiltering.slice(indexFirstDog, indexLastDog);
+  /**************************************************************************/
+  // funciones de ejecucion de eventos
   const handleInputChange = (e) => {
+    setCurrentPage(1);
     e.preventDefault();
     setSearchDogs({
       ...searchDogs,
@@ -55,53 +144,113 @@ const temperaments = useSelector((state) => state.temperaments);
     });
   };
   const handleSelecChange = (e) => {
-    //console.log(e.target.value);
+    setCurrentPage(1);
     setSearchDogs({
       ...searchDogs,
-      temperament: e.target.value,
+      [e.target.name]: e.target.value,
     });
   };
+
+  const handlePrev = (e) => {
+    e.preventDefault();
+    setCurrentPage(currentPage - 1);
+  };
+
+  const handleNext = (e) => {
+    e.preventDefault();
+    setCurrentPage(currentPage + 1);
+  };
+
+  //**************************************/
   return (
     <div>
-      <div>
-        <select onChange={handleSelecChange}>
-          <option value="">Temperaments</option>
+      <div className="filtros">
+        <select onChange={handleSelecChange} name="temperament">
+          <option value="">All temperaments</option>
           {temperaments?.map((elem) => (
             <option name="temperament" value={elem.name} key={elem.id}>
               {elem.name}
             </option>
           ))}
         </select>
+        <select onChange={handleSelecChange} name="created">
+          <option value="all">All dogs</option>
+          <option value="created">Created</option>
+          <option value="api">API</option>
+        </select>
+
+        <select onChange={handleSelecChange} name="sort">
+          <option value="">Select sort...</option>
+          <option value="asc">Name (A-Z)</option>
+          <option value="des">Name (Z-A)</option>
+          <option value="menor">Weight (asc)</option>
+          <option value="mayor">Weight (desc)</option>
+        </select>
         <input
+        className="input"
           name="name"
           type="text"
           value={searchDogs.name}
           onChange={handleInputChange}
+          placeholder="Search dog"
         ></input>
-        <Link to="/create">
-          <button>Create dog</button>
-        </Link>
-      </div>
 
-      <div className="cards">
-        {dogsFiltering?.map((elem) => (
-          
-          <DogCard
-            key={elem.id}
-            id={elem.id}
-            img={
-              elem.image?.hasOwnProperty("url") ? elem.image.url : elem.image
-            }
-            name={elem.name}
-            temperament={elem.temperament}
-            weight={
-              elem.weight?.hasOwnProperty("metric")
-                ? elem.weight.metric
-                : elem.weight
-            }
-          />
-        ))}
+
+
       </div>
+      <div>
+        <Paginado
+          dogsPerPage={dogsPerPage}
+          dogs={dogsFiltering.length}
+          paginate={paginate}
+          currentPage={currentPage}
+          handlePrev={handlePrev}
+          handleNext={handleNext}
+          currentDogs={currentDogs}
+        />
+      </div>
+      <div className="cards">
+        {dogs.hasOwnProperty("error") ? (
+          <Error />
+        ) : currentDogs.length ? (
+          currentDogs.map((elem) => {
+            return (
+              <DogCard
+                key={elem.id}
+                id={elem.id}
+                img={
+                  elem.image?.hasOwnProperty("url")
+                    ? elem.image.url
+                    : elem.image
+                }
+                name={elem.name}
+                temperament={elem.temperament}
+                weight={
+                  elem.weight?.hasOwnProperty("metric")
+                    ? elem.weight.metric
+                    : elem.weight
+                }
+              />
+            );
+          })
+        ) : searchDogs.name || searchDogs.temperament ? (
+          <Error />
+        ) : (
+          <Loader />
+        )}
+      </div>
+      <div>
+        <Paginado
+          dogsPerPage={dogsPerPage}
+          dogs={dogsFiltering.length}
+          paginate={paginate}
+          currentPage={currentPage}
+          handlePrev={handlePrev}
+          handleNext={handleNext}
+          currentDogs={currentDogs}
+        />
+      </div>
+      <Footer />
     </div>
   );
 };

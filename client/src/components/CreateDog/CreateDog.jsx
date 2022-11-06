@@ -4,24 +4,24 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import ListsTemperaments from "./ListsTemperaments";
 import validate from "./validate";
+import Footer from "../Footer/Footer";
 
 const CreateDog = () => {
   const dispatch = useDispatch();
 
   const [dog, setDog] = React.useState({
     name: "",
-    heightMin: 0,
-    heightMax: 0,
-    weightMin: 0,
-    weightMax: 0,
-    lifeMin: 0,
-    lifeMax: 0,
+    heightMin: "",
+    heightMax: "",
+    weightMin: "",
+    weightMax: "",
+    lifeMin: "",
+    lifeMax: "",
     image: "",
     temperaments: [],
   });
 
-  const [error, setError] = React.useState({notnull: ''});
-  console.log(error);
+  const [error, setError] = React.useState({ notnull: "" });
   const temperaments = useSelector((state) => state.temperaments);
 
   React.useEffect(() => {
@@ -63,19 +63,19 @@ const CreateDog = () => {
     let dogTemperamentFilter = dog.temperaments.filter((c) => c !== name);
     setDog({
       ...dog,
-      [name.target.name]: [...dogTemperamentFilter],
+      temperaments: [...dogTemperamentFilter],
     });
     setError(
       validate({
         ...dog,
-        [name.target.name]: [...dogTemperamentFilter],
+        temperaments: [...dogTemperamentFilter],
       })
     );
   }
 
   const handleOnSubmit = function (e) {
     e.preventDefault();
-    if(!Object.keys(error).length){
+    if (!Object.keys(error).length) {
       let arrTemperaments = temperaments.filter((elem) =>
         dog.temperaments.find((prop) => prop === elem.name)
       );
@@ -88,13 +88,24 @@ const CreateDog = () => {
         life_span: `${dog.lifeMin} - ${dog.lifeMax}`,
         image: dog.image,
       };
-      let test = dispatch(actions.createDog(dogCreate));
-      console.log(test);
+      dispatch(actions.createDog(dogCreate));
+      
+      //luego de creado limpio los campos
+      setDog({
+        name: "",
+        heightMin: "",
+        heightMax: "",
+        weightMin: "",
+        weightMax: "",
+        lifeMin: "",
+        lifeMax: "",
+        image: "",
+        temperaments: [],
+      });
+      alert("Dog Created");
+    } else {
+      console.log("faltan datos");
     }
-    else{
-    console.log("faltan datos");
-    }
-
   };
 
   return (
@@ -116,7 +127,7 @@ const CreateDog = () => {
           min="1"
           name="heightMin"
           placeholder="Min cm"
-          value={dog.heightMin ? dog.heightMin : null}
+          value={dog.heightMin}
           onChange={handleInputChange}
         ></input>
         {error.heightMin && <p>{error.heightMin}</p>}
@@ -125,7 +136,7 @@ const CreateDog = () => {
           min="1"
           name="heightMax"
           placeholder="Max cm"
-          value={dog.heightMax ? dog.heightMax : null}
+          value={dog.heightMax}
           onChange={handleInputChange}
         ></input>
         {error.heightMax && <p>{error.heightMax}</p>}
@@ -136,7 +147,7 @@ const CreateDog = () => {
           min="1"
           name="weightMin"
           placeholder="Min Kg"
-          value={dog.weightMin ? dog.weightMin : null}
+          value={dog.weightMin}
           onChange={handleInputChange}
         ></input>
         {error.weightMin && <p>{error.weightMin}</p>}
@@ -145,7 +156,7 @@ const CreateDog = () => {
           min="1"
           name="weightMax"
           placeholder="Max Kg"
-          value={dog.weightMax ? dog.weightMax : null}
+          value={dog.weightMax}
           onChange={handleInputChange}
         ></input>
         {error.weightMax && <p>{error.weightMax}</p>}
@@ -156,7 +167,7 @@ const CreateDog = () => {
           min="1"
           name="lifeMin"
           placeholder="Min"
-          value={dog.lifeMin ? dog.lifeMin : null}
+          value={dog.lifeMin}
           onChange={handleInputChange}
         ></input>
         {error.lifeMin && <p>{error.lifeMin}</p>}
@@ -165,7 +176,7 @@ const CreateDog = () => {
           min="1"
           name="lifeMax"
           placeholder="Max"
-          value={dog.lifeMax ? dog.lifeMax : null}
+          value={dog.lifeMax}
           onChange={handleInputChange}
         ></input>
         {error.lifeMax && <p>{error.lifeMax}</p>}
@@ -178,6 +189,9 @@ const CreateDog = () => {
           value={dog.image}
           onChange={handleInputChange}
         ></input>
+        {dog.image ? (
+          <img src={dog.image} alt={dog.image} width="500" height="600"/>
+        ) : null}
         <div>
           <div>
             <label>temperaments: </label>
@@ -210,6 +224,7 @@ const CreateDog = () => {
       <Link to="/home">
         <button>back</button>
       </Link>
+      <Footer/>
     </div>
   );
 };

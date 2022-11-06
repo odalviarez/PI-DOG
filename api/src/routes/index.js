@@ -1,7 +1,7 @@
 const { Router } = require("express");
 const {
   getDogs,
- // getDogsByName,
+  getDogsBDDInfo,
   createDog,
   getTemperaments,
   getDogsAndSave,
@@ -24,24 +24,48 @@ router.get("/dogs", async (req, res) => {
     if (allDogs.length) {
       res.json(allDogs);
     } else {
-      res.status(404).send("ningun dato encontrado");
+      res.status(404).json({ error: "Not Found" });
     }
   } catch (error) {
-    res.json(error.message);
+    res.status(400).json({ error: error.message }); 
   }
 });
 
-//Se debe traer de la API y guardarlos en la BDD
+router.get("/dogsapi", async (req, res) => {
+  try {
+    let allDogs = await getDogs();
+    if (allDogs.length) {
+      res.json(allDogs);
+    } else {
+      res.status(404).json([]);
+    }
+  } catch (error) {
+    res.status(400).json({ error: error.message }); 
+  }
+});
+
+router.get("/dogsbdd", async (req, res) => {
+  try {
+    let allDogs = await getDogsBDDInfo();
+    if (allDogs.length) {
+      res.json(allDogs);
+    } else {
+      res.status(404).json({ error: "Not Found" }); 
+    }
+  } catch (error) {
+    res.status(400).json({ error: error.message }); 
+  }
+});
+
 //Trae todos los temperamentos
 router.get("/dogs/temperaments", async (req, res) => {
   try {
     let result = await getTemperaments();
     res.json(result);
   } catch (error) {
-    res.json(error.messange);
+    res.status(404).json({ error: error.message }); 
   }
 });
-
 
 router.get("/home", async (req, res) => {
   try {
@@ -49,7 +73,7 @@ router.get("/home", async (req, res) => {
     allDogs = await getDogsAndSave();
     res.json(allDogs);
   } catch (error) {
-    res.json(error.message);
+    res.status(400).json({ error: error.message }); 
   }
 });
 
@@ -60,7 +84,8 @@ router.get("/dogs/:id", async (req, res) => {
     let { id } = req.params;
     res.json(await getDogById(id));
   } catch (error) {
-    res.json(error.messange);
+    console.log(error)
+    res.status(400).json({ error: error.message }); 
   }
 });
 
@@ -71,7 +96,7 @@ router.post("/dogs", async (req, res) => {
     let resp = await createDog(req.body);
     res.json(resp);
   } catch (error) {
-    res.json(error.messange);
+    res.status(400).json({ error: error.message }); 
   }
 });
 
