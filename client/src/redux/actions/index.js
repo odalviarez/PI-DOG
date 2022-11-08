@@ -8,18 +8,13 @@ export const SEARCH_DOGS = "SEARCH_DOGS";
 export const GET_TEMPERAMENTS = "GET_TEMPERAMENTS";
 export const CLEAR_DETAILS = "CLEAR_DETAILS";
 
-export const getAllDogs = (name) => (dispatch) => {
+export const getAllDogs = (name) => async (dispatch) => {
   try {
-    return fetch(
-      name ? `http://localhost:3001/dogs/${name}` : "http://localhost:3001/dogs"
-    )
-      .then((json) => json.json())
-      .then((json) =>
-        dispatch({
-          type: GET_ALL_DOGS,
-          payload: json,
-        })
-      );
+    const json = await axios.get(name ? `/dogs/${name}` : "/dogs");
+    return dispatch({
+      type: GET_ALL_DOGS,
+      payload: json.data,
+    });
   } catch (error) {
     return dispatch({
       type: GET_ALL_DOGS,
@@ -28,16 +23,13 @@ export const getAllDogs = (name) => (dispatch) => {
   }
 };
 
-export const getDogsBDD = () => (dispatch) => {
+export const getDogsBDD = () => async (dispatch) => {
   try {
-    return fetch("http://localhost:3001/dogsbdd")
-      .then((json) => json.json())
-      .then((json) =>
-        dispatch({
-          type: GET_ALL_DOGS,
-          payload: json,
-        })
-      );
+    const json = await axios.get("/dogsbdd");
+    return dispatch({
+      type: GET_ALL_DOGS,
+      payload: json.data,
+    });
   } catch (error) {
     return dispatch({
       type: GET_ALL_DOGS,
@@ -46,16 +38,13 @@ export const getDogsBDD = () => (dispatch) => {
   }
 };
 
-export const getDogsAPI = () => (dispatch) => {
+export const getDogsAPI = () => async (dispatch) => {
   try {
-    return fetch("http://localhost:3001/dogsapi")
-      .then((json) => json.json())
-      .then((json) =>
-        dispatch({
-          type: GET_ALL_DOGS,
-          payload: json,
-        })
-      );
+    const json = await axios.get("/dogsapi");
+    return dispatch({
+      type: GET_ALL_DOGS,
+      payload: json.data,
+    });
   } catch (error) {
     return dispatch({
       type: GET_ALL_DOGS,
@@ -64,16 +53,13 @@ export const getDogsAPI = () => (dispatch) => {
   }
 };
 
-export const getAllDogsHome = () => (dispatch) => {
+export const getAllDogsHome = () => async (dispatch) => {
   try {
-    return fetch("http://localhost:3001/home")
-      .then((json) => json.json())
-      .then((json) =>
-        dispatch({
-          type: GET_ALL_DOGS,
-          payload: json,
-        })
-      );
+    const json = await axios.get("/home");
+    return dispatch({
+      type: GET_ALL_DOGS,
+      payload: json.data,
+    });
   } catch (error) {
     return dispatch({
       type: GET_ALL_DOGS,
@@ -82,16 +68,13 @@ export const getAllDogsHome = () => (dispatch) => {
   }
 };
 
-export const getDogDetail = (id) => (dispatch) => {
+export const getDogDetail = (id) => async (dispatch) => {
   try {
-    return fetch(`http://localhost:3001/dogs/${id}`)
-      .then((json) => json.json())
-      .then((json) =>
-        dispatch({
-          type: GET_DOG_DETAILS,
-          payload: json,
-        })
-      );
+    const json = await axios.get(`/dogs/${id}`);
+    return dispatch({
+      type: GET_DOG_DETAILS,
+      payload: json.data,
+    });
   } catch (error) {
     return dispatch({
       type: GET_DOG_DETAILS,
@@ -100,16 +83,13 @@ export const getDogDetail = (id) => (dispatch) => {
   }
 };
 
-export const getTemperaments = () => (dispatch) => {
+export const getTemperaments = () => async (dispatch) => {
   try {
-    return fetch(`http://localhost:3001/dogs/temperaments`)
-      .then((json) => json.json())
-      .then((json) =>
-        dispatch({
-          type: GET_TEMPERAMENTS,
-          payload: json,
-        })
-      );
+    const json = await axios.get(`/dogs/temperaments`);
+    return dispatch({
+      type: GET_TEMPERAMENTS,
+      payload: json.data,
+    });
   } catch (error) {
     return dispatch({
       type: GET_TEMPERAMENTS,
@@ -117,17 +97,13 @@ export const getTemperaments = () => (dispatch) => {
     });
   }
 };
-
-export const searchDogs = (value) => (dispatch) => {
+export const searchDogs = (value) => async (dispatch) => {
   try {
-    return fetch("http://localhost:3001/dogs?name=" + value)
-      .then((json) => json.json())
-      .then((json) =>
-        dispatch({
-          type: SEARCH_DOGS,
-          payload: json,
-        })
-      );
+    const json = await axios.get("/dogs?name=" + value);
+    return dispatch({
+      type: SEARCH_DOGS,
+      payload: json.data,
+    });
   } catch (error) {
     return dispatch({
       type: SEARCH_DOGS,
@@ -136,25 +112,12 @@ export const searchDogs = (value) => (dispatch) => {
   }
 };
 
-export const createDog = (values) => (dispatch) => {
+export const createDog = (values) => async (dispatch) => {
   try {
-    var config = {
-      method: "post",
-      url: "http://localhost:3001/dogs",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      data: values,
-    };
-  
-    let response = axios(config)
-      .then((response) => JSON.stringify(response.data))
-      .catch((error) => error);
-
-      console.log(response)
+    const json = await axios.post("/dogs", values);
     return {
       type: CREATE_DOG,
-      payload: response,
+      payload: json,
     };
   } catch (error) {
     return dispatch({
