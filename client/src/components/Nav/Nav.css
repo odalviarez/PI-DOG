@@ -23,9 +23,10 @@
   color: white;
   text-decoration: none;
   position: relative;
-
 }
-
+.texto:hover {
+  text-decoration: underline;
+}
 
 
 .btn-create {

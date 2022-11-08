@@ -9,6 +9,9 @@
     margin-right: 20px;
     margin-bottom: 20px;
 }
+.link{
+    text-decoration: none;
+}
 
 button {
     cursor: pointer;
@@ -50,6 +53,9 @@ button:disabled {
         -6px -6px 12px #ffffff;
 }
 
+ul{
+    list-style: none;
+}
 .filtros {
     position: static;
     display: flex;
@@ -60,7 +66,7 @@ button:disabled {
     height: 50px;
 }
 
-.input {
+input {
     border: none;
     padding: 0.7rem;
     border-radius: 15px;
@@ -69,7 +75,7 @@ button:disabled {
     transition: 0.3s;
 }
 
-.input:focus {
+input:focus {
     outline-color: #4C4B45;
     background: #e8e8e8;
     box-shadow: inset 20px 20px 60px #A19F90,
@@ -77,7 +83,7 @@ button:disabled {
     transition: 0.3s;
 }
 
-select {
+.selectStyle {
 
     outline: 0;
     box-shadow: none;
@@ -91,11 +97,11 @@ select {
     font-family: 'Open Sans', sans-serif;
     border-radius: 15px;
     line-height: 3;
-    overflow: hidden;
+
 }
 
 
-select::after {
+.selectStyle::after {
     content: '\25BC';
     position: absolute;
     top: 0;

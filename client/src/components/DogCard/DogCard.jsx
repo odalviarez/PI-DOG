@@ -5,7 +5,7 @@ import "./DogCard.css";
 const DogCard = (props) => {
   return (
     <div className="card">
-      <Link to={`/details/${props.id}`}>
+      <Link to={`/details/${props.id}`} className="link">
         <div className="dogCard">
           <img src={props.img} alt={props.img} className="dogImg" />{" "}
         </div>

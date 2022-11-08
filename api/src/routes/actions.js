@@ -97,7 +97,6 @@ const createDog = async (data) => {
         origin,
       });
       dogCreated.addTemperament(temperaments);
-      //return dogCreated;
       return "Dog Created";
     } else {
       return "Faltan datos para crear el perro";

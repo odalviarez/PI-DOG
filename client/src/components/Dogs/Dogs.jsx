@@ -4,7 +4,6 @@ import React from "react";
 
 import { useDispatch, useSelector } from "react-redux";
 import DogCard from "../DogCard/DogCard";
-import { Link } from "react-router-dom";
 import Paginado from "./Paginado";
 import Loader from "../Loader/Loader";
 import Error from "../Error/Error";
@@ -19,8 +18,8 @@ const Dogs = () => {
   });
 
   const [currentPage, setCurrentPage] = React.useState(1);
-  const [dogsPerPage, setDogsPerPage] = React.useState(8);
-
+  //const [dogsPerPage, setDogsPerPage] = React.useState(8);
+  const dogsPerPage = 8;
   const dispatch = useDispatch();
 
   React.useEffect(() => {
@@ -33,7 +32,6 @@ const Dogs = () => {
 
   const temperaments = useSelector((state) => state.temperaments);
   const dogs = useSelector((state) => state.dogs);
-  const error = useSelector((state) => state.error);
 
   const indexLastDog = currentPage * dogsPerPage;
   const indexFirstDog = indexLastDog - dogsPerPage;
@@ -165,7 +163,11 @@ const Dogs = () => {
   return (
     <div>
       <div className="filtros">
-        <select onChange={handleSelecChange} name="temperament">
+        <select
+          className="selectStyle"
+          onChange={handleSelecChange}
+          name="temperament"
+        >
           <option value="">All temperaments</option>
           {temperaments?.map((elem) => (
             <option name="temperament" value={elem.name} key={elem.id}>
@@ -173,13 +175,21 @@ const Dogs = () => {
             </option>
           ))}
         </select>
-        <select onChange={handleSelecChange} name="created">
+        <select
+          className="selectStyle"
+          onChange={handleSelecChange}
+          name="created"
+        >
           <option value="all">All dogs</option>
           <option value="created">Created</option>
           <option value="api">API</option>
         </select>
 
-        <select onChange={handleSelecChange} name="sort">
+        <select
+          className="selectStyle"
+          onChange={handleSelecChange}
+          name="sort"
+        >
           <option value="">Select sort...</option>
           <option value="asc">Name (A-Z)</option>
           <option value="des">Name (Z-A)</option>
@@ -187,16 +197,13 @@ const Dogs = () => {
           <option value="mayor">Weight (desc)</option>
         </select>
         <input
-        className="input"
+          className="input"
           name="name"
           type="text"
           value={searchDogs.name}
           onChange={handleInputChange}
           placeholder="Search dog"
         ></input>
-
-
-
       </div>
       <div>
         <Paginado

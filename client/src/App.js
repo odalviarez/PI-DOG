@@ -10,7 +10,6 @@ import CreateDog from './components/CreateDog/CreateDog';
 function App() {
   return (
     <div className="App">
-
       <Route exact path="/" component={Home} />
       <Route path="/home" component={NavBar} />
       <Route exact path="/home" component={Dogs} />

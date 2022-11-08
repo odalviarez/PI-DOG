@@ -13,12 +13,12 @@ const validate = (input) => {
     errors.name = "Name is required";
   } else if (input.name.match("^[ a-zA-ZñÑáéíóúÁÉÍÓÚ]+$")) {
     if (input.name.length < 3) {
-      errors.name = "Debe contener al menos 3 caracteres";
+      errors.name = "Must contain at least 3 characters";
     } else if (input.name.length > 255) {
-      errors.name = "No debe ser mayor a 254 caracteres";
+      errors.name = "Must be no longer than 254 characters";
     }
   } else {
-    errors.name = "No debe contener numeros ni caracteres especiales";
+    errors.name = "Must not contain numbers or special characters";
   }
   if (!input.heightMin) {
     errors.heightMin = "heightMin is required";
@@ -27,7 +27,7 @@ const validate = (input) => {
       errors.heightMin = "Should be taller than 1cm";
     }
   } else {
-    errors.heightMin = "Debe contener solo numeros enteros positivos";
+    errors.heightMin = "Must contain only positive integers";
   }
 
   if (!input.heightMax) {
@@ -37,7 +37,7 @@ const validate = (input) => {
       errors.heightMax = "Should be taller than heightMin";
     }
   } else {
-    errors.heightMax = "Debe contener solo numeros enteros positivos";
+    errors.heightMax = "Must contain only positive integers";
   }
 
   if (!input.weightMin) {
@@ -47,7 +47,7 @@ const validate = (input) => {
       errors.weightMin = "Should be taller than 1cm";
     }
   } else {
-    errors.weightMin = "Debe contener solo numeros enteros positivos";
+    errors.weightMin = "Must contain only positive integers";
   }
 
   if (!input.weightMax) {
@@ -57,7 +57,7 @@ const validate = (input) => {
       errors.weightMax = "Should be taller than heightMin";
     }
   } else {
-    errors.weightMax = "Debe contener solo numeros enteros positivos";
+    errors.weightMax = "Must contain only positive integers";
   }
 
   if (!input.lifeMin) {
@@ -67,7 +67,7 @@ const validate = (input) => {
       errors.lifeMin = "Should be taller than 1cm";
     }
   } else {
-    errors.lifeMin = "Debe contener solo numeros enteros positivos";
+    errors.lifeMin = "Must contain only positive integers";
   }
 
   if (!input.lifeMax) {
@@ -77,7 +77,7 @@ const validate = (input) => {
       errors.lifeMax = "Should be taller than heightMin";
     }
   } else {
-    errors.lifeMax = "Debe contener solo numeros enteros positivos";
+    errors.lifeMax = "Must contain only positive integers";
   }
 
   if (!input.temperaments.length) {

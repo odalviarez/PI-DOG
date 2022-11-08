@@ -20,7 +20,11 @@ const DogDetails = (props) => {
   //Mientras espera la info de useSelector muestra el Loader
 
   return !Object.keys(dogDetail).length ? (
-    <Loader />
+    <div className="content">
+      <div className="contentLoader">
+        <Loader />
+      </div>
+    </div>
   ) : dogDetail.hasOwnProperty("error") ? (
     <div>
       <Link to="/home">
@@ -33,27 +37,39 @@ const DogDetails = (props) => {
       <Link to="/home">
         <button>back</button>
       </Link>
-      <div className="cardDetails">
-        <div>
-          <h1>{dogDetail.name}</h1>
+      <div className="cardContent">
+        <div className="title">
+          <h1 className="texto">Dog Details</h1>
         </div>
-        <div>
-          <img className="imgDog"
-            src={
-              dogDetail.image?.hasOwnProperty("url")
-                ? dogDetail.image.url
-                : dogDetail.image
-            }
-            alt={
-              dogDetail.image?.hasOwnProperty("url")
-                ? dogDetail.image.url
-                : dogDetail.image
-            }
-          />
-        </div>
-        <p>{dogDetail.temperament}</p>
-        <p>{dogDetail.origin}</p>
-        <p>{dogDetail.life_span}</p>
+
+        <ul className="list">
+          <li>
+            <div>
+              <img
+                className="imgContainer"
+                src={
+                  dogDetail.image?.hasOwnProperty("url")
+                    ? dogDetail.image.url
+                    : dogDetail.image
+                }
+                alt={
+                  dogDetail.image?.hasOwnProperty("url")
+                    ? dogDetail.image.url
+                    : dogDetail.image
+                }
+              />
+            </div>
+          </li>
+          <li>
+            <div>
+              <h1>{dogDetail.name}</h1>
+            </div>
+
+            <p>{dogDetail.temperament}</p>
+            <p>{dogDetail.origin}</p>
+            <p>{dogDetail.life_span}</p>
+          </li>
+        </ul>
       </div>
       <Footer />
     </div>
