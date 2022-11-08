@@ -3,7 +3,7 @@
     align-items: center;
     justify-content: center;
     position: relative;
-    width: 80%;
+    width: 70%;
     height: 80%;
     margin-left: auto;
     margin-right: auto;
@@ -13,17 +13,36 @@
     box-shadow: 15px 15px 30px #bebebe,
         -15px -15px 30px #ffffff;
     background: #FFFFFF;
+    max-height: 800px;
+    max-width: 1000px;
 }
 
-.content {
+
+.contIzqDetails {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.contDerDetails {
+
+    padding: 1rem;
+    text-align: initial;
+}
+
+.contentDetails {
+    display: flex;
+    position: relative;
+    justify-content: flex-start;
+
+}
+
+.contLoader {
+
     position: relative;
 
-}
 
-.contentLoader {
-    position: absolute;
-    top: 50%;
-    left: 50%;
+    justify-content: center;
 }
 
 .list {
@@ -31,9 +50,19 @@
     justify-content: center;
 }
 
+.pDetails {
+    font-family: "Rubik", sans-serif;
+    font-weight: 300;
+    font-size: clamp(1.3rem, 0.5rem + 5vw, 1.3rem);
+    color: 181111;
+}
+
 .imgContainer {
-    max-width: 500px;
-    max-height: 500px;
+    width: 100%;
+    height: auto;
+    max-width: 600px;
+    max-height: 600px;
+    border-radius: 0px 0px 0px 15px
 }
 
 .title {
@@ -44,6 +73,46 @@
     border-radius: 30px 30px 0px 0px;
     align-items: center;
     gap: 1rem;
-    color: white;
+}
 
+.btnBackDetails {
+    cursor: pointer;
+    padding: 15px 25px;
+    border-radius: 15px;
+    color: #212121;
+    z-index: 1;
+    background: #e8e8e8;
+    position: relative;
+    font-weight: 1000;
+    font-size: 17px;
+    -webkit-box-shadow: 4px 8px 19px -3px rgba(0, 0, 0, 0.27);
+    box-shadow: 4px 8px 19px -3px rgba(0, 0, 0, 0.27);
+    transition: all 250ms;
+    overflow: hidden;
+    margin-top: 30px;
+
+}
+
+.btnBackDetails::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 0;
+    border-radius: 15px;
+    background-color: #4C4B45;
+    z-index: -1;
+    -webkit-box-shadow: 4px 8px 19px -3px rgba(0, 0, 0, 0.27);
+    box-shadow: 4px 8px 19px -3px rgba(0, 0, 0, 0.27);
+    transition: all 250ms
+}
+
+.btnBackDetails:hover {
+    color: #e8e8e8;
+    border: 1px solid #f1efef;
+}
+
+.btnBackDetails:hover::before {
+    width: 100%;
 }

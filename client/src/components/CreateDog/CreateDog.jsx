@@ -111,6 +111,9 @@ const CreateDog = () => {
 
   return (
     <div>
+      <Link to="/home">
+        <button className="btnBack">Back</button>
+      </Link>
       <div className="contentCreate">
         <div className="cardContentC">
           <div className="title">
@@ -273,13 +276,9 @@ const CreateDog = () => {
               </button>
             </ul>
           </form>
-          <Link to="/home">
-            <button className="btnCreate">Back</button>
-          </Link>
         </div>
       </div>
-        <Footer />
-
+      <Footer />
     </div>
   );
 };

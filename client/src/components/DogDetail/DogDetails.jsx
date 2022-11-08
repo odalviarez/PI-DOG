@@ -20,56 +20,70 @@ const DogDetails = (props) => {
   //Mientras espera la info de useSelector muestra el Loader
 
   return !Object.keys(dogDetail).length ? (
-    <div className="content">
-      <div className="contentLoader">
+    <div className="contLoader">
+      <div>
         <Loader />
       </div>
+      <Footer />
     </div>
   ) : dogDetail.hasOwnProperty("error") ? (
     <div>
       <Link to="/home">
-        <button>back</button>
+        <button className="btnBackDetails">back</button>
       </Link>
       <Error />
     </div>
   ) : (
     <div>
       <Link to="/home">
-        <button>back</button>
+        <button className="btnBackDetails">back</button>
       </Link>
       <div className="cardContent">
         <div className="title">
-          <h1 className="texto">Dog Details</h1>
+          <h1 className="texto">{dogDetail.name}</h1>
         </div>
-
-        <ul className="list">
-          <li>
-            <div>
-              <img
-                className="imgContainer"
-                src={
-                  dogDetail.image?.hasOwnProperty("url")
-                    ? dogDetail.image.url
-                    : dogDetail.image
-                }
-                alt={
-                  dogDetail.image?.hasOwnProperty("url")
-                    ? dogDetail.image.url
-                    : dogDetail.image
-                }
-              />
-            </div>
-          </li>
-          <li>
-            <div>
-              <h1>{dogDetail.name}</h1>
-            </div>
-
-            <p>{dogDetail.temperament}</p>
-            <p>{dogDetail.origin}</p>
-            <p>{dogDetail.life_span}</p>
-          </li>
-        </ul>
+        <div className="contentDetails">
+          <div className="contIzqDetails">
+            <img
+              className="imgContainer"
+              src={
+                dogDetail.image?.hasOwnProperty("url")
+                  ? dogDetail.image.url
+                  : dogDetail.image
+              }
+              alt={
+                dogDetail.image?.hasOwnProperty("url")
+                  ? dogDetail.image.url
+                  : dogDetail.image
+              }
+            />
+          </div>
+          <div className="contDerDetails">
+            <p className="pDetails">
+              {dogDetail.temperament
+                ? `Temperament: ${dogDetail.temperament}`
+                : ""}
+            </p>
+            <p className="pDetails">
+              {dogDetail.origin ? `Origin: ${dogDetail.origin}` : ""}
+            </p>
+            <p className="pDetails">
+              {dogDetail.weight?.hasOwnProperty("metric")
+                ? `Weight: ${dogDetail.weight.metric}`
+                : `Weight: ${dogDetail.weight}`}
+              cm
+            </p>
+            <p className="pDetails">
+              {dogDetail.height?.hasOwnProperty("metric")
+                ? `Height: ${dogDetail.height.metric}`
+                : `Height: ${dogDetail.height}`}
+              kg
+            </p>
+            <p className="pDetails">
+              {dogDetail.life_span ? `Life span: ${dogDetail.life_span}` : ""}
+            </p>
+          </div>
+        </div>
       </div>
       <Footer />
     </div>
