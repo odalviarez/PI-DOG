@@ -128,6 +128,21 @@ const Dogs = () => {
         return 0;
       });
       if (searchDogs.sort === "mayor") dogsFiltering.reverse();
+    } else if (searchDogs.sort === "menorLS" || searchDogs.sort === "mayorLS") {
+      dogsFiltering.sort((elem1, elem2) => {
+        let elem1Aux = elem1.life_span
+        let elem2Aux = elem2.life_span
+        elem1Aux = elem1Aux.split(" - ");
+        elem2Aux = elem2Aux.split(" - ");
+        elem1Aux = elem1Aux[0].slice(0,2)
+        elem2Aux = elem2Aux[0].slice(0,2);
+        console.log(elem1Aux , elem2Aux);
+        if (Number(elem1Aux) < Number(elem2Aux)) return -1;
+        if (Number(elem1Aux) > Number(elem2Aux)) return 1;
+        return 0;
+      });
+      if (searchDogs.sort === "mayorLS") dogsFiltering.reverse();
+
     }
   }
   const currentDogs = dogsFiltering.slice(indexFirstDog, indexLastDog);
@@ -195,6 +210,8 @@ const Dogs = () => {
           <option value="des">Name (Z-A)</option>
           <option value="menor">Weight (asc)</option>
           <option value="mayor">Weight (desc)</option>
+          <option value="menorLS">Life Span (asc)</option>
+          <option value="mayorLS">Life Span (desc)</option>
         </select>
         <input
           className="input"
