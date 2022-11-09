@@ -22,7 +22,7 @@ const DogDetails = (props) => {
   return !Object.keys(dogDetail).length ? (
     <div className="contLoader">
       <div>
-        <Loader />
+        <Loader/>
       </div>
       <Footer />
     </div>
@@ -85,7 +85,7 @@ const DogDetails = (props) => {
           </div>
         </div>
       </div>
-      <Footer />
+      <Footer/>
     </div>
   );
 };

@@ -82,10 +82,11 @@ router.get("/dogs/:id", async (req, res) => {
   //busca el id y trae la informacion, si no lo encuentra debe retornar 404 y un mensaje que indique el id no existe
   try {
     let { id } = req.params;
-    res.json(await getDogById(id));
+    let details = await getDogById(id);
+    
+    res.json(details);
   } catch (error) {
-    console.log(error)
-    res.status(400).json({ error: error.message }); 
+    res.status(400).json(error); 
   }
 });
 

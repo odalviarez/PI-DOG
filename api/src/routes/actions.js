@@ -31,7 +31,6 @@ const getDogs = async (name) => {
 
 const getDogsBDDInfo = async (name) => {
   let dogsBDD = [];
-  let dogTemperament = [];
   if (name) {
     dogsBDD = await Dog.findAll({
       where: {
@@ -107,23 +106,25 @@ const createDog = async (data) => {
 };
 
 const getTemperaments = async () => {
-
   return await Temperament.findAll();
 };
 
 const getDogById = async (id) => {
-
   //retorna el objeto con los datos del perro buscado por ID
   let dogFilter = await getAllDogs(); //getDogs();
   let dogFind = dogFilter.find((e) => Number(e.id) === Number(id));
   if (dogFind) {
     return dogFind;
   } else {
-    //buscamos primero si el ID se encuentra en la base de datos. Si se encuentra retorna toda la info de ese perro. de lo contrario llama la api y busca el perro
+    //buscamos primero si el ID se encuentra en la api. Si se encuentra retorna toda la info de ese perro. de lo contrario lo busca en la base de ratos y retorna y busca el perro
     dogFilter = await Dog.findAll();
-    if (dogFilter.length) return dogFilter.find((e) => e.id == id);
+
+    if (dogFilter.length) {
+      dogFind = dogFilter.find((e) => e.id == id);
+      if (dogFind) return dogFind;
+    }
   }
-   throw new Error(`ID ${id} not found`);
+  return({error: `ID ${id} not found`});
 };
 
 const getDogsAndSave = async (name) => {
