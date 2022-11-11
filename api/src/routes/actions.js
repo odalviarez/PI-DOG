@@ -66,6 +66,7 @@ const getAllDogs = async (name) => {
       temperament: e.temperament,
       image: e.image,
       origin: e.origin,
+      bdd: e.bdd ? e.bdd : false,
     };
   });
 
@@ -124,7 +125,7 @@ const getDogById = async (id) => {
       if (dogFind) return dogFind;
     }
   }
-  return({error: `ID ${id} not found`});
+  return { error: `ID ${id} not found` };
 };
 
 const getDogsAndSave = async (name) => {
@@ -155,6 +156,16 @@ const getDogsAndSave = async (name) => {
   return allDogs;
 };
 
+const deleteDog = async (id) => {
+  let dogDelete = await Dog.destroy({
+    where: {
+      id,
+    },
+  });
+
+  return dogDelete;
+};
+
 module.exports = {
   getDogs,
   getDogById,
@@ -163,4 +174,5 @@ module.exports = {
   getTemperaments,
   getAllDogs,
   getDogsBDDInfo,
+  deleteDog,
 };

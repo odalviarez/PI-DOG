@@ -7,6 +7,7 @@ const {
   getDogsAndSave,
   getDogById,
   getAllDogs,
+  deleteDog,
 } = require("./actions.js");
 
 // Importar todos los routers;
@@ -50,7 +51,7 @@ router.get("/dogsbdd", async (req, res) => {
     if (allDogs.length) {
       res.json(allDogs);
     } else {
-      res.status(404).json({ error: "Not Found" }); 
+      res.json({ error: "Not Found" }); 
     }
   } catch (error) {
     res.status(400).json({ error: error.message }); 
@@ -89,6 +90,21 @@ router.get("/dogs/:id", async (req, res) => {
     res.status(400).json(error); 
   }
 });
+
+router.delete("/dogs/:id", async (req, res) => {
+try {
+  let {id} = req.params;
+  if(id) {
+    let dogDelete = await deleteDog(id);
+    res.json(dogDelete);
+  }else{
+    res.json("ID not found")
+  }
+} catch (error) {
+  res.status(400).json(error); 
+}
+
+})
 
 router.post("/dogs", async (req, res) => {
   //crea un perro y lo guarda en la BDD, recibe por body el json

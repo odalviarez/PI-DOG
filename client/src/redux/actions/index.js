@@ -132,7 +132,7 @@ export const clearDetails = () => {
     payload: {},
   };
 };
-export const deleteDog = (id) => {
+export const deleteDog = async (id) => {
   return {
     type: DELETE_DOG,
     payload: id,
