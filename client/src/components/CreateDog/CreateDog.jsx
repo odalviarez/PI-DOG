@@ -244,6 +244,7 @@ const CreateDog = () => {
                       required=""
                       name="temperaments"
                     >
+                      <option value="">Select temperaments</option>
                       {temperaments?.map((elem) => (
                         <option
                           name="temperament"
