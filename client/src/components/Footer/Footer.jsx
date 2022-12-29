@@ -4,11 +4,11 @@ import gitImg from "../../img/github.png";
 import linkedin from "../../img/linkedin.png";
 const Footer = () => {
   return (
-    <div class="footer">
-      <div class="credits">
+    <div className="footer">
+      <div className="credits">
         <ul>
           <li>
-            <a class="osc" href="https://www.instagram.com/odalviarez/">
+            <a className="osc" href="https://www.instagram.com/odalviarez/">
               Oscar Alviarez, 2022
             </a>
           </li>

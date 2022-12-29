@@ -105,7 +105,7 @@ const DogDetails = (props) => {
         </div>
       )}
       <div id="popup1" className="overlay">
-        <div class="popup">
+        <div className="popup">
           <h2>Are you sure you want to remove {dogDetail.name}</h2>
           <a className="close" href={"#"}>
             &times;

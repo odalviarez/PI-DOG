@@ -175,8 +175,10 @@ const Dogs = () => {
   };
 
   //**************************************/
+  
   return (
     <div>
+      {temperaments.hasOwnProperty("message")? <p>Error en comunicacion con la API</p> :
       <div className="filtros">
         <select
           className="selectStyle"
@@ -222,6 +224,7 @@ const Dogs = () => {
           placeholder="Search dog"
         ></input>
       </div>
+      }
       <div>
         <Paginado
           dogsPerPage={dogsPerPage}
